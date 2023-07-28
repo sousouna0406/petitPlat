@@ -1,0 +1,168 @@
+.head-img {
+    background-image: url('/assets/image/Mask-group.png');
+    background-size: cover;
+    object-fit: cover;
+    background-repeat: no-repeat;
+}
+
+.object-fit-cover {
+    object-fit: contain;
+}
+
+.logo {
+    width: 13rem;
+    margin: 55px;
+}
+
+.width {
+    width: 42rem;
+    margin: 16rem 16rem 2rem 16rem;
+}
+
+
+.width-shearch {
+    width: 4rem;
+    height: 4rem;
+    pointer-events: none;
+
+}
+
+.bg-white {
+    width: 5rem;
+}
+
+.custom-search-bar {
+    width: 67%;
+    height: 5rem;
+    outline: none;
+    margin-bottom: 10rem;
+}
+
+.form-control {
+    border: none;
+    border-radius: 10px 0px 0px 10px;
+}
+
+.custom-input {
+    color: #494747;
+    font-weight: 100;
+    font-size: 16px;
+    padding: 0;
+    padding-left: 4rem;
+}
+
+
+.custom-input:focus {
+    box-shadow: none;
+    outline: none;
+    color: #494747;
+    padding-left: 4rem;
+}
+
+.custom-input::placeholder {
+    color: #494747;
+
+}
+
+/* Styles pour le dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown button {
+    width: 10rem;
+    height: 3.5em;
+    background-color: white;
+}
+
+.dropdown-menu button {
+    width: 2rem;
+    height: 38px;
+    border-right: 1px solid rgb(186, 186, 186);
+    border-top: 1px solid rgb(186, 186, 186);
+    border-bottom: 1px solid rgb(186, 186, 186);
+}
+
+
+/* Styles pour afficher le contenu du dropdown au survol */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 157px;
+    padding: 10px;
+    border: 1px solid white;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    width: 10rem;
+    position: absolute;
+    top: 42px;
+    border: none;
+
+}
+
+
+/* Styles pour l'icône de flèche vers le bas */
+.arrow-icon {
+    margin-left: 10px;
+}
+
+.icon-gray {
+    color: rgb(186, 186, 186);
+}
+
+.custom-form-group {
+    display: flex;
+    align-items: center;
+}
+
+.custom-btn {
+    width: 2rem;
+    height: 2rem;
+    background-color: white;
+    border-radius: 0px;
+}
+
+.custom-font-light {
+    font-weight: 300;
+}
+
+.width-shearch-bis {
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+
+}
+
+#custom-input-no-border.form-control {
+
+    border-radius: 0px;
+    border-left: 1px solid rgb(186, 186, 186);
+    ;
+    border-top: 1px solid rgb(186, 186, 186);
+    ;
+    border-bottom: 1px solid rgb(186, 186, 186);
+    ;
+}
+
+.btn:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: white;
+    border-color: white
+        /* background-color: var(--bs-btn-hover-bg); */
+        /* border-color: var(--bs-btn-hover-border-color); */
+}
+
+.btn-border-none {
+    border: none;
+}
+
+.form-control:focus {
+    outline-width: 0;
+    box-shadow: 0 0 0 0px lightslategrey;
+    /* Bordure personnalisée pour le focus */
+}

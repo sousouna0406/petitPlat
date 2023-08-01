@@ -16,7 +16,7 @@
        <img src="assets/image/txt.png" class="d-flex justify-content-center img-fluid width object-fit-cover" alt=" Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses">
       
          <div class="input-group custom-search-bar  ">
-            <input type="text"  class="form-control  rounded-start-4 custom-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" maxlength="100" placeholder="Rechercher une recette, un ingrédient, ...">
+            <input id="search-bar" type="text"  class="form-control  rounded-start-4 custom-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" maxlength="100" placeholder="Rechercher une recette, un ingrédient, ...">
             <div class="bg-white d-flex justify-content-center align-items-center rounded-end-4 p-1  " >      
              <button class="bg-black d-flex justify-content-center align-items-center rounded-4 width-shearch">
               <i class="fas fa-search text-white fa-2x"></i>
@@ -79,14 +79,15 @@
     </div>
   </div>
 
-  <section class="recipe" >
+  <section class="recipes content d-flex justify-content-center" >
 
    
   </section>
   
     </main>
+    <script type="module" src="./scripts/pages/search-bar.js"></script>
     <script src="./scripts/data/recipes.js" type="text/javascript"></script>
-    <script src="./scripts/pages/index.js" defer></script>
-    <script  src="./scripts/factories/recipe.js" defer></script>
+    <script type="module"  src="./scripts/pages/index.js" defer></script>
+    <script type="module"  src="./scripts/factories/recipe.js" defer></script>
 </body>
 </html>

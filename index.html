@@ -27,67 +27,87 @@
     </header>
 
     <main class="bg-body-secondary">
-    
+      <section class="content d-flex justify-content-between align-items-center">
+      <nav class="d-flex mr-1">
       <div class="dropdown m-4">
-        <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="dropdownMenuButton">
+        <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="ingredientDropdownButton">
           Ingrédient <i class="arrow-icon fas fa-chevron-down"></i>
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div class="dropdown-menu" aria-labelledby="ingredientDropdownButton">
           <form class="pl-2 pr-2">
             <div class="form-group custom-form-group">
-              <input type="text" id="custom-input-no-border" class="form-control">
+              <input type="text" id="ingredientSearchInput" class="form-control border-light-input tag-input" data-category="ingredients">
               <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
                 <i class="fas fa-search icon-gray fa-1x"></i>
               </button>
             </div>
+            <ul class="tag-list" id="ingredientsTagList">
+              <!-- La liste de mots-clés sera générée ici -->
+            </ul>
             <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
           </form>
         </div>
       </div>
 
-  <div class="dropdown m-4">
-    <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="dropdownMenuButton">
-      Appareils <i class="arrow-icon fas fa-chevron-down"></i>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <form class="pl-2 pr-2">
-        <div class="form-group custom-form-group">
-          <input type="text" id="custom-input-no-border" class="form-control">
-          <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
-            <i class="fas fa-search icon-gray fa-1x"></i>
-          </button>
+      <div class="dropdown m-4">
+        <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="appareilsDropdownButton">
+          Appareils <i class="arrow-icon fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="appareilsDropdownButton">
+          <form class="pl-2 pr-2">
+            <div class="form-group custom-form-group">
+              <input type="text" id="appareilsSearchInput" class="form-control border-light-input tag-input" data-category="appliance">
+              <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
+                <i class="fas fa-search icon-gray fa-1x"></i>
+              </button>
+            </div>
+            <ul class="tag-list" id="applianceTagList">
+              <!-- La liste de mots-clés sera générée ici -->
+            </ul>
+            <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
+          </form>
         </div>
-        <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
-      </form>
-    </div>
-  </div>
+      </div>
 
-  <div class="dropdown m-4">
-    <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="dropdownMenuButton">
-      Ustensiles <i class="arrow-icon fas fa-chevron-down"></i>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <form class="pl-2 pr-2">
-        <div class="form-group custom-form-group">
-          <input type="text" id="custom-input-no-border" class="form-control">
-          <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
-            <i class="fas fa-search icon-gray fa-1x"></i>
-          </button>
+      <div class="dropdown m-4">
+        <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="ustensilesDropdownButton">
+          Ustensiles <i class="arrow-icon fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="ustensilesDropdownButton">
+          <form class="pl-2 pr-2">
+            <div class="form-group custom-form-group">
+              <input type="text" id="ustensilesSearchInput" class="form-control border-light-input tag-input " data-category="ustensils">
+              <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
+                <i class="fas fa-search icon-gray fa-1x"></i>
+              </button>
+            </div>
+            <ul class="tag-list" id="ustensilsTagList">
+              <!-- La liste de mots-clés sera générée ici -->
+            </ul>
+            <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
+          </form>
         </div>
-        <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
-      </form>
-    </div>
-  </div>
+      </div>
+     </nav>
+     <div id="recipe-count">
+     <span id="total-recipe-count" class="font-weight-bold fs-4 anto mr-5">recettes</span> 
+     </div>
 
+    </section>
+     <div id="selectedTags" class="content d-flex row rounded-4">
+      <!-- Les tags sélectionnés seront affichés ici -->
+    </div>
   <section class="recipes content d-flex justify-content-center" >
 
    
   </section>
   
     </main>
+    <script type="module" src="./scripts/pages/filtered.js"></script>
+    <script type="module" src="./scripts/pages/tag-systeme.js"></script>
     <script type="module" src="./scripts/pages/search-bar.js"></script>
-    <script src="./scripts/data/recipes.js" type="text/javascript"></script>
-    <script type="module"  src="./scripts/pages/index.js" defer></script>
-    <script type="module"  src="./scripts/factories/recipe.js" defer></script>
+    <script  src="./scripts/data/recipes.js" type="text/javascript"></script>
+    <script type="module"  src="./scripts/pages/index.js" ></script>
+    <script type="module"  src="./scripts/factories/recipe.js" ></script>
 </body>
 </html>

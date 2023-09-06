@@ -1,42 +1,90 @@
 import { displayRecipe } from '../pages/index.js';
-
-function removeAccents(str) {
+import { generateTagLists, setupDynamicSearchTag, filterRecipesByTag } from '../pages/tag-systeme.js';
+ 
+export function removeAccents(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
-  function filterRecipesByLetter(letter) {
-    console.log(letter);
-  
-    const lowercaseLetter = removeAccents(letter.toLowerCase()); // Convertir et retirer les accents de la lettre saisie
-    console.log(lowercaseLetter);
+  export function filterRecipesByType(filterType, letter) {
+    const lowercaseLetter = removeAccents(letter.toLowerCase());
   
     const filteredRecipes = recipes.filter(recipe => {
-      console.log(recipe);
-      const recipeName = removeAccents(recipe.name.toLowerCase()); // Convertir et retirer les accents du nom de recette
-      console.log(recipeName);
-      return recipeName.includes(lowercaseLetter);
+      let filterValue = '';
+  
+      switch (filterType) {
+        case 'letter':
+          filterValue = removeAccents(recipe.name.toLowerCase());
+          break;
+        case 'appliance':
+          filterValue = removeAccents(recipe.appliance.toLowerCase());
+          break;
+        case 'ingredient':
+          recipe.ingredients.forEach(ingredientObj => {
+            if (typeof ingredientObj.ingredient === 'string') {
+              ingredientObj.ingredient = removeAccents(ingredientObj.ingredient.toLowerCase());
+            }
+          });
+          filterValue = recipe.ingredients.map(ingredientObj => ingredientObj.ingredient);
+          break;
+        case 'ustensil':
+          const validUstensils = recipe.ustensils.filter(ustensil => ustensil !== undefined);
+          filterValue = validUstensils.map(ustensil => removeAccents(ustensil.toLowerCase()));
+          break;
+        default:
+          return false;
+      }
+  
+      return filterValue.includes(lowercaseLetter);
     });
   
-    console.log(filteredRecipes);
     return filteredRecipes;
   }
-
-export async function setupSearchBar() {
-    const searchInput = document.getElementById('search-bar');
-    let searchText = '';
   
-    searchInput.addEventListener('input', async function() {
-      searchText = searchInput.value.trim();
-      console.log(searchText);
-      if (searchText.length >= 1) {
-        const filteredRecipes = filterRecipesByLetter(searchText);
-        displayRecipe(filteredRecipes);
+  export const eventFilteredRecipesUpdated = new Event('filteredRecipesUpdated');
+
+  export let filteredRecipes = []; // Variable pour stocker les recettes filtrées
+
+  export function setupSearchBar() {
+    const searchInput = document.getElementById('search-bar');
+  
+    function updateFilteredRecipes(searchText) {
+      const lowercaseSearchText = removeAccents(searchText.toLowerCase());
+  
+      if (searchText.length >= 3) {
+        const filteredRecipesByName = filterRecipesByType('letter', lowercaseSearchText);
+        const filteredRecipesByIngredient = filterRecipesByType('ingredient', lowercaseSearchText);
+        const filteredRecipesByUstensil = filterRecipesByType('ustensil', lowercaseSearchText);
+        const filteredRecipesAppliance = filterRecipesByType('appliance', lowercaseSearchText);
+  
+        const allFilteredRecipes = [...filteredRecipesByName, ...filteredRecipesByIngredient, ...filteredRecipesByUstensil, ...filteredRecipesAppliance];
+        const uniqueFilteredRecipes = [...new Set(allFilteredRecipes)];
+  
+        filteredRecipes = uniqueFilteredRecipes;
       } else {
         // Si le texte de recherche a moins de 3 caractères, afficher toutes les recettes
-        const allRecipes = await getRecipes('');
-        displayRecipe(allRecipes);
+        filteredRecipes = recipes;
+      }
+  
+      displayRecipe(filteredRecipes);
+      document.dispatchEvent(eventFilteredRecipesUpdated);
+    }
+  
+    searchInput.addEventListener('input', function () {
+      const searchText = searchInput.value.trim();
+      console.log(searchText);
+      updateFilteredRecipes(searchText);
+    });
+  
+    searchInput.addEventListener('keydown', function (event) {
+      if ((event.key === 'Backspace' || event.key === 'Delete') && searchInput.value.trim() === '') {
+        // Réinitialiser la recherche principale et actualiser la liste de tags
+        generateTagLists(recipes);
+        setupDynamicSearchTag(recipes);
       }
     });
-  }
   
+    document.addEventListener('filteredRecipesUpdated', () => {
+      console.log('Résultat combiné:', filteredRecipes);
+    });
+  }
   

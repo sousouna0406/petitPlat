@@ -138,8 +138,18 @@
 
 }
 
-#custom-input-no-border.form-control {
+.border-light-input {
 
+    border-radius: 0px;
+    border-left: 1px solid rgb(186, 186, 186);
+    ;
+    border-top: 1px solid rgb(186, 186, 186);
+    ;
+    border-bottom: 1px solid rgb(186, 186, 186);
+    ;
+}
+
+.form-control:focus {
     border-radius: 0px;
     border-left: 1px solid rgb(186, 186, 186);
     ;
@@ -255,4 +265,26 @@ article {
     height: 1rem;
     border-radius: 15px;
     align-items: center;
+}
+
+.selected-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 11%;
+    padding: 13px 8px;
+    background-color: #FFD15B;
+    color: black;
+    border-radius: 14px;
+    cursor: pointer;
+    margin: -left;
+    margin-left: 3.2rem;
+}
+
+.mr-5 {
+    margin-right: 4rem;
+}
+
+.mr-1 {
+    margin-left: 1rem;
 }

@@ -1,5 +1,7 @@
 import { displayRecipe } from '../pages/index.js';
 import { filteredRecipes, setupSearchBar } from '../pages/search-bar.js';
+
+
 console.log(recipes);
  let allRecipes = recipes
 export let tagText = ''
@@ -7,13 +9,17 @@ export let tagText = ''
 
 export function normalizeTag(tagValue) {
     if (typeof tagValue === 'string') {
-      return tagValue.toLowerCase();
+      // Remplacement les caractères accentués par leurs équivalents non accentués
+      return tagValue
+        .toLowerCase()
+        .normalize("NFD") // Normalisation Unicode pour les caractères accentués
+        .replace(/[\u0300-\u036f]/g, ""); // Supprime les caractères diacritiques (accents)
     } else {
-      return ''; // Retourner une chaîne vide ou un autre traitement approprié pour les valeurs non définies
+      return ''; // Retourne une chaîne vide ou un autre traitement approprié pour les valeurs non définies
     }
   }
 
-export function generateTagList(tagList, keywords, category) {
+export function generateTagList(tagList, keywords) {
     tagList.innerHTML = ''; 
     keywords.forEach(keyword => {
         const tagItem = document.createElement('li');
@@ -24,7 +30,30 @@ export function generateTagList(tagList, keywords, category) {
 }
   
 export function createSelectedTag(tagText, filteredRecipes) {
-    const selectedTagsElement = document.getElementById('selectedTags');
+  console.log('Fonction createSelectedTag appelée avec tagText:', tagText);
+  const categories = ['ingredients', 'appliance', 'ustensils'];
+  
+  const tagsByCategory = {};
+
+  categories.forEach(category => {
+    console.log(category);
+
+    tagsByCategory[category] = new Set();
+    console.log(tagsByCategory[category]);
+  });
+
+  const selectedTagsElement = document.getElementById('selectedTags');
+  const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
+  
+  // Vérifie si le tag est déjà sélectionné
+  let isAlreadySelected = false;
+  tagElements.forEach(tagElement => {
+    if (tagElement.textContent.includes(tagText)) {
+      isAlreadySelected = true;
+    }
+  });
+
+  if (!isAlreadySelected) {
     const tagElement = document.createElement('span');
     tagElement.classList.add('selected-tag');
     tagElement.textContent = tagText;
@@ -33,68 +62,104 @@ export function createSelectedTag(tagText, filteredRecipes) {
     const closeIcon = document.createElement('span');
     closeIcon.classList.add('close-icon');
     closeIcon.textContent = 'x';
-    closeIcon.addEventListener('click', () => {
-        console.log(filteredRecipes);
-    
-        console.log(filteredRecipes);
-        removeTagFromSelectedList(tagText,filteredRecipes);
+    closeIcon.addEventListener('click', (event) => {
+      const tagText = event.currentTarget.parentElement.textContent.replace('x', '').trim();
+      console.log('Clic sur l\'icône de suppression');
+      console.log('tagText avant la suppression :', tagText);
+      console.log(tagText);
+      removeTagFromSelectedList(tagText);
     });
     
     tagElement.appendChild(closeIcon);
     selectedTagsElement.appendChild(tagElement);
-            
+    console.log('Tag ajouté avec succès:', tagText);
+  }
 }
-    
+
 export function removeTagFromSelectedList(tagText) {
-    const selectedTagsElement = document.getElementById('selectedTags');
-    const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
-    
-    // Supprimer le tag de la liste affichée
-    tagElements.forEach(tagElement => {
-        if (tagElement.textContent.includes(tagText)) {
-            tagElement.remove();
-        }
-    });
+  console.log('TagText à supprimer:', tagText); // Vérifiez la valeur de tagText
 
-    // Désélectionner le tag dans la liste des tags
-    const tagListItems = document.querySelectorAll('.tag-list li.tag');
-    tagListItems.forEach(tagItem => {
-        if (tagItem.textContent.toLowerCase() === tagText) {
-            tagItem.classList.remove('selected');
-        }
-    });
+  const selectedTagsElement = document.getElementById('selectedTags');
+  const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
 
-    // Récupérer les tags restants
-    const selectedTags = document.querySelectorAll('.selected-tag');
-    const selectedTagValues = Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
+  // Supprime le tag de la liste affichée
+  tagElements.forEach(tagElement => {
+    if (tagElement.textContent.includes(tagText)) {
+      tagElement.remove();
+      console.log('Tag supprimé de la liste affichée.');
+    }
+  });
 
-    // Récupérer la valeur de la recherche principale
-    const searchInput = document.getElementById('search-bar');
-    const searchText = searchInput ? searchInput.value.trim() : '';
+  // Désélectionne le tag dans la liste des tags
+  const tagListItems = document.querySelectorAll('.tag-list li.tag');
+  tagListItems.forEach(tagItem => {
+    if (tagItem.textContent.toLowerCase() === tagText) {
+      tagItem.classList.remove('selected');
+      console.log('Tag désélectionné dans la liste des tags.');
+    }
+  });
 
+
+// Récupère les tags restants
+const selectedTags = document.querySelectorAll('.selected-tag');
+const selectedTagValues = Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
+
+// Si des tags restent sélectionnés ou s'il y a du texte dans le champ de recherche, filtre des recettes en conséquence
+if (selectedTagValues.length > 0 || document.getElementById('search-bar').value.trim() !== '') {
     const updatedFilter = allRecipes.filter(recipe => {
         const recipeTags = [
             ...(recipe.ingredients || []).map(ingredient => normalizeTag(ingredient.ingredient)),
             normalizeTag(recipe.appliance),
             ...(recipe.ustensils || []).map(ustensil => normalizeTag(ustensil))
         ];
-        const recipeName = normalizeTag(recipe.name.toLowerCase()); // Convertir et retirer les accents du nom de recette
+        const recipeName = normalizeTag(recipe.name.toLowerCase());
 
-        // Vérifier si la recherche principale est vide ou si le nom de la recette correspond à la recherche
-        return (selectedTagValues.every(tag => recipeTags.includes(tag)) && (!searchText || recipeName.includes(searchText)));
+        // Vérifier si le champ de recherche contient du texte
+        const searchTextMatch = document.getElementById('search-bar').value.trim() === '' || recipeName.includes(document.getElementById('search-bar').value.trim());
+
+        // Vérifier si les tags restants correspondent aux recettes
+        return (selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch);
     });
 
-
-    if (updatedFilter.length > 0) {
-        console.log('Recettes filtrées mises à jour:', updatedFilter);
-        displayRecipe(updatedFilter);
-    } else {
-        console.log('Aucune recette ne correspond aux filtres.');
-        // Afficher toutes les recettes si aucun filtre n'est appliqué
-        displayRecipe(allRecipes);
-    }
+    console.log('Tags restants:', selectedTagValues);
+    console.log('Recherche principale:', document.getElementById('search-bar').value.trim());
+    console.log('Recettes filtrées mises à jour:', updatedFilter);
+    displayRecipe(updatedFilter);
+    generateTagLists(updatedFilter)
+} else {
+    // Si aucun tag n'est sélectionné et qu'il n'y a pas de texte dans le champ de recherche, affichez toutes les recettes
+    console.log('Aucun tag sélectionné et pas de texte dans la recherche. Afficher toutes les recettes.');
+    displayRecipe(allRecipes);
+    generateTagLists(allRecipes)
+}
 }
 
+
+function handleTagSelection(tagText) {
+  const tagListItems = document.querySelectorAll('.tag-list li.tag');
+  tagListItems.forEach(tagItem => {
+    if (tagItem.textContent.toLowerCase() === tagText) {
+      const isSelected = tagItem.classList.contains('selected');
+      
+      if (!isSelected) {
+   
+        console.log('Tag sélectionné:', tagText);
+        tagItem.classList.add('selected');
+        createSelectedTag(tagText);
+      }
+      
+      // Après avoir sélectionné ou désélectionné un tag, réexécutez filterRecipesByTag
+      filterRecipesByTag(allRecipes);
+    }
+  });
+}
+
+
+
+
+
+
+  
 
 export function setupDynamicSearchTag(allRecipes) {
     const tagInputs = document.querySelectorAll('.tag-input');
@@ -104,47 +169,38 @@ export function setupDynamicSearchTag(allRecipes) {
             const category = input.getAttribute('data-category');
             const tagList = document.querySelector(`#${category}TagList`);
             const allTags = Array.from(tagList.querySelectorAll('.tag'));
-        
-            const searchQuery = normalizeTag(input.value.trim().toLowerCase()); 
+
+            const searchQuery = normalizeTag(input.value.trim().toLowerCase());
 
             allTags.forEach(tag => {
-                const tagText = normalizeTag(tag.textContent.toLowerCase()); 
+                const tagText = normalizeTag(tag.textContent.toLowerCase());
                 if (tagText.includes(searchQuery)) {
-                    tag.style.display = 'block'; 
+                    tag.style.display = 'block';
                 } else {
-                    tag.style.display = 'none'; 
+                    tag.style.display = 'none';
                 }
             });
-      
-            // Vérifier si une recherche par champ principal est en cours
-           
         });
     });
-    // Gestion des clics sur les tags
-    const tagListItems = document.querySelectorAll('.tag-list li.tag');
-    tagListItems.forEach(tagItem => {
-    tagItem.addEventListener('click', event => {
-        const tagText = tagItem.textContent;
-        console.log('Tag sélectionné:', tagText);
 
-        const isSelected = tagItem.classList.contains('selected');
+// Gestion des clics sur les tags
+const tagLists = document.querySelectorAll('.tag-list'); // Sélectionnez toutes les listes de tags
 
-        if (isSelected) {
-        // Si le tag est déjà sélectionné, le désélectionner
-        console.log("désélectionner");
-        tagItem.classList.remove('selected');
-        removeTagFromSelectedList(tagText); 
-        } else {
-        // le sélectionner
-        console.log("sélectionner");
-        tagItem.classList.add('selected');
-        createSelectedTag(tagText,filteredRecipes); 
-        }
-        console.log(allRecipes);
-        filterRecipesByTag(allRecipes);
-    });
-    });
-} 
+tagLists.forEach(tagList => {
+  tagList.addEventListener('click', event => {
+    if (event.target.classList.contains('tag')) {
+      const tagItem = event.target;
+      const tagText = tagItem.textContent;
+      console.log('Tag sélectionné:', tagText);
+      handleTagSelection(tagText);
+    }
+  });
+});
+
+}
+
+
+
 export function getSelectedTagValues() {
     const selectedTags = document.querySelectorAll('.selected-tag');
     
@@ -152,71 +208,97 @@ export function getSelectedTagValues() {
     return Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
   }
 
-export function filterRecipesByTag(allRecipes) {
-    console.log(allRecipes);
-    const selectedTagValues = getSelectedTagValues()
-console.log(selectedTagValues);
- // Vérifier s'il y a au moins un tag sélectionné
- if (selectedTagValues.length === 0) {
-    console.log("Aucun tag sélectionné.");
-    return; // Sortir de la fonction si aucun tag n'est sélectionné
-}
+  export function filterRecipesByTag(allRecipes) {
+    const selectedTagValues = getSelectedTagValues();
+    const searchInput = document.getElementById('search-bar');
+    const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
     const filteredRecipes = allRecipes.filter(recipe => {
-    const recipeTags = [
-        ...recipe.ingredients.map(ingredient => normalizeTag(ingredient.ingredient)),
-        normalizeTag(recipe.appliance),
-        ...recipe.ustensils.map(ustensil => normalizeTag(ustensil))
-    ];
+        const recipeTags = [
+            ...recipe.ingredients.map(ingredient => normalizeTag(ingredient.ingredient)),
+            normalizeTag(recipe.appliance),
+            ...recipe.ustensils.map(ustensil => normalizeTag(ustensil))
+        ];
+        const recipeName = normalizeTag(recipe.name.toLowerCase());
 
-    console.log(recipeTags);
-    // Vérifier si tous les tags sélectionnés correspondent exactement à un tag dans la recette
-    console.log(selectedTagValues.every(tag => recipeTags.includes(tag)));
-    return selectedTagValues.every(tag => recipeTags.includes(tag));
-    
+        // Ajout de la recherche principale comme critère de filtrage
+        const searchTextMatch = searchText === '' || recipeName.includes(searchText);
+
+        return selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch;
     });
-    console.log(filteredRecipes);
-        displayRecipe(filteredRecipes);
-     
+
+    console.log('Recettes filtrées par tag - Résultat:', filteredRecipes);
+
+    displayRecipe(filteredRecipes);
+
+    // Vérifiez si des tags sont sélectionnés ou si du texte de recherche est présent
+    if (selectedTagValues.length > 0 || searchText.length > 0) {
+        // Générez une nouvelle liste de tags en fonction des recettes filtrées
+        generateTagLists(filteredRecipes);
+    }
 }
-    
+
 export function generateTagLists(recipes) {
-    const tagLists = document.querySelectorAll('.tag-list');
+  console.log('Début de la génération des listes de tags.');
 
-    // Récupérer toutes les catégories dynamiquement à partir d'une recette
-    const categories = Object.keys(recipes[0]).filter(category => {
-        return category === 'ingredients' || category === 'appliance' || category === 'ustensils';
-    });
+  if (!Array.isArray(recipes) || recipes.length === 0) {
 
-    categories.forEach(category => {
-        const keywords = [];
+    return;
+  }
 
-        recipes.forEach(recipe => {
-        const categoryKeywords = recipe[category];
-        
-        if (Array.isArray(categoryKeywords)) {
-            categoryKeywords.forEach(subKeyword => {
-            const keywordValue = typeof subKeyword === 'string'
-            ? subKeyword.toLowerCase() // Convertir en minuscules
-            : subKeyword.ingredient.toLowerCase();
-            if (!keywords.includes(keywordValue)) {
-                keywords.push(keywordValue);
-            }
-            });
-        } else if (typeof categoryKeywords === 'string') {
-            const keywordValue = categoryKeywords.toLowerCase(); 
-            if (!keywords.includes(keywordValue)) {
-            keywords.push(keywordValue);
-            }
-        }
-        });
-        
-        for (const tagList of tagLists) {
-        if (tagList.id === `${category}TagList`) {
-            generateTagList(tagList, keywords, category);
-            break; 
-        }
-        }
-    });
-}
+  const categories = ['ingredients', 'appliance', 'ustensils'];
   
+  const tagsByCategory = {};
+
+  categories.forEach(category => {
+    console.log(category);
+
+    tagsByCategory[category] = new Set();
+    console.log(tagsByCategory[category]);
+  });
+
+  recipes.forEach(recipe => {
+    categories.forEach(category => {
+      const categoryKeywords = Array.isArray(recipe[category])
+        ? recipe[category].map(subKeyword => {
+            if (typeof subKeyword === 'string') {
+              return subKeyword.toLowerCase();
+            } else if (typeof subKeyword === 'object' && 'ingredient' in subKeyword) {
+              return subKeyword.ingredient.toLowerCase();
+            }
+            return '';
+          })
+        : typeof recipe[category] === 'string'
+        ? [recipe[category].toLowerCase()]
+        : [];
+
+      categoryKeywords.forEach(keywordValue => {
+        tagsByCategory[category].add(keywordValue);
+      });
+    });
+  });
+
+  // Triez les tags par catégorie
+  categories.forEach(category => {
+    tagsByCategory[category] = Array.from(tagsByCategory[category]).sort();
+  });
+
+  // Utilisez les tags triés pour générer les listes de tags
+  const tagLists = [
+    document.getElementById('ingredientsTagList'),
+    document.getElementById('applianceTagList'),
+    document.getElementById('ustensilsTagList')
+  ];
+
+  tagLists.forEach((tagList, index) => {
+    if (tagList) {
+      const relevantTags = tagsByCategory[categories[index]];
+      generateTagList(tagList, relevantTags, categories[index]);
+      console.log(`Liste de tags générée pour la catégorie ${categories[index]}:`, relevantTags);
+    }
+  });
+
+  console.log('Fin de la génération des listes de tags.');
+}
+
   

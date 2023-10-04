@@ -29,6 +29,7 @@
     <main class="bg-body-secondary">
       <section class="content d-flex justify-content-between align-items-center">
       <nav class="d-flex mr-1">
+            <!-- Menu Ingrédients -->
       <div class="dropdown m-4">
         <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="ingredientDropdownButton">
           Ingrédient <i class="arrow-icon fas fa-chevron-down"></i>
@@ -44,11 +45,12 @@
             <ul class="tag-list" id="ingredientsTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
-            <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
+     
           </form>
         </div>
       </div>
 
+        <!-- Menu Appareils -->
       <div class="dropdown m-4">
         <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="appareilsDropdownButton">
           Appareils <i class="arrow-icon fas fa-chevron-down"></i>
@@ -64,11 +66,11 @@
             <ul class="tag-list" id="applianceTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
-            <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
           </form>
         </div>
       </div>
 
+        <!-- Menu Ustensiles -->
       <div class="dropdown m-4">
         <button class="d-flex align-items-center justify-content-around btn-border-none rounded-4 custom-font-light" type="button" id="ustensilesDropdownButton">
           Ustensiles <i class="arrow-icon fas fa-chevron-down"></i>
@@ -84,7 +86,7 @@
             <ul class="tag-list" id="ustensilsTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
-            <!-- Autres éléments du menu déroulant peuvent être ajoutés ici -->
+         
           </form>
         </div>
       </div>
@@ -92,17 +94,19 @@
      <div id="recipe-count">
      <span id="total-recipe-count" class="font-weight-bold fs-4 anto mr-5">recettes</span> 
      </div>
-
     </section>
+  <!-- Divs pour afficher les tags sélectionnés sous chaque menu -->
+  <div class="tag-display" id="ingredientTagDisplay"></div>
+  <div class="tag-display" id="appareilTagDisplay"></div>
+  <div class="tag-display" id="ustensileTagDisplay"></div>
+  
      <div id="selectedTags" class="content d-flex row rounded-4">
+
       <!-- Les tags sélectionnés seront affichés ici -->
     </div>
   <section class="recipes content d-flex justify-content-center" >
-
-   
   </section>
-  
-    </main>
+   </main>
     <script type="module" src="./scripts/pages/filtered.js"></script>
     <script type="module" src="./scripts/pages/tag-systeme.js"></script>
     <script type="module" src="./scripts/pages/search-bar.js"></script>

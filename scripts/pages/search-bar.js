@@ -46,6 +46,8 @@ export function removeAccents(str) {
 
   export function setupSearchBar() {
     const searchInput = document.getElementById('search-bar');
+
+    
   
     function updateFilteredRecipes(searchText) {
       const lowercaseSearchText = removeAccents(searchText.toLowerCase());
@@ -72,6 +74,7 @@ export function removeAccents(str) {
     searchInput.addEventListener('input', function () {
       const searchText = searchInput.value.trim();
       console.log(searchText);
+ 
       updateFilteredRecipes(searchText);
     });
   

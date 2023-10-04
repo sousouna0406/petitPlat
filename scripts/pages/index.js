@@ -34,11 +34,8 @@ export async function displayRecipe(allRecipes) {
 async function init() {
   try {
       allRecipes = await getRecipes(); 
-      // Appeler la fonction qui ajoute les eventListeners à l'input
-      // Appeler la fonction qui ajoute les eventListeners au tags
       searchCumul();
-    
-     displayRecipe(allRecipes);
+      displayRecipe(allRecipes);
   } catch (error) {
       console.error(error);
   }

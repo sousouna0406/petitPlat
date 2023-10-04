@@ -1,5 +1,5 @@
 import { displayRecipe } from '../pages/index.js';
-import { filteredRecipes, setupSearchBar } from '../pages/search-bar.js';
+
 
 
 console.log(recipes);
@@ -29,18 +29,9 @@ export function generateTagList(tagList, keywords) {
     });
 }
   
-export function createSelectedTag(tagText, filteredRecipes) {
+export function createSelectedTag(tagText) {
   console.log('Fonction createSelectedTag appelée avec tagText:', tagText);
-  const categories = ['ingredients', 'appliance', 'ustensils'];
-  
-  const tagsByCategory = {};
 
-  categories.forEach(category => {
-    console.log(category);
-
-    tagsByCategory[category] = new Set();
-    console.log(tagsByCategory[category]);
-  });
 
   const selectedTagsElement = document.getElementById('selectedTags');
   const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
@@ -251,10 +242,7 @@ export function generateTagLists(recipes) {
   const tagsByCategory = {};
 
   categories.forEach(category => {
-    console.log(category);
-
     tagsByCategory[category] = new Set();
-    console.log(tagsByCategory[category]);
   });
 
   recipes.forEach(recipe => {

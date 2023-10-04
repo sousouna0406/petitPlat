@@ -1,5 +1,5 @@
 import { displayRecipe } from '../pages/index.js';
-import { generateTagLists, setupDynamicSearchTag, filterRecipesByTag } from '../pages/tag-systeme.js';
+import { generateTagLists, setupDynamicSearchTag} from '../pages/tag-systeme.js';
  
 export function removeAccents(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -8,7 +8,10 @@ export function removeAccents(str) {
   export function filterRecipesByType(filterType, letter) {
     const lowercaseLetter = removeAccents(letter.toLowerCase());
   
-    const filteredRecipes = recipes.filter(recipe => {
+    const filteredRecipes = [];
+    
+    for (let i = 0; i < recipes.length; i++) {
+      const recipe = recipes[i];
       let filterValue = '';
   
       switch (filterType) {
@@ -24,21 +27,35 @@ export function removeAccents(str) {
               ingredientObj.ingredient = removeAccents(ingredientObj.ingredient.toLowerCase());
             }
           });
-          filterValue = recipe.ingredients.map(ingredientObj => ingredientObj.ingredient);
+  
+          filterValue = [];
+          for (let j = 0; j < recipe.ingredients.length; j++) {
+            filterValue.push(recipe.ingredients[j].ingredient);
+          }
           break;
         case 'ustensil':
-          const validUstensils = recipe.ustensils.filter(ustensil => ustensil !== undefined);
-          filterValue = validUstensils.map(ustensil => removeAccents(ustensil.toLowerCase()));
+          const validUstensils = [];
+          for (let j = 0; j < recipe.ustensils.length; j++) {
+            if (recipe.ustensils[j] !== undefined) {
+              validUstensils.push(removeAccents(recipe.ustensils[j].toLowerCase()));
+            }
+          }
+          filterValue = validUstensils;
           break;
         default:
           return false;
       }
   
-      return filterValue.includes(lowercaseLetter);
-    });
+      if (filterValue.includes(lowercaseLetter)) {
+        filteredRecipes.push(recipe);
+      }
+    }
   
     return filteredRecipes;
   }
+  
+  
+  
   
   export const eventFilteredRecipesUpdated = new Event('filteredRecipesUpdated');
 

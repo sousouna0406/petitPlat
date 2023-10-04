@@ -22,11 +22,12 @@ export function removeAccents(str) {
           filterValue = removeAccents(recipe.appliance.toLowerCase());
           break;
         case 'ingredient':
-          recipe.ingredients.forEach(ingredientObj => {
+          for (let j = 0; j < recipe.ingredients.length; j++) {
+            const ingredientObj = recipe.ingredients[j];
             if (typeof ingredientObj.ingredient === 'string') {
               ingredientObj.ingredient = removeAccents(ingredientObj.ingredient.toLowerCase());
             }
-          });
+          }
   
           filterValue = [];
           for (let j = 0; j < recipe.ingredients.length; j++) {
@@ -53,7 +54,6 @@ export function removeAccents(str) {
   
     return filteredRecipes;
   }
-  
   
   
   

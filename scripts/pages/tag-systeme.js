@@ -32,7 +32,6 @@ export function generateTagList(tagList, keywords) {
 export function createSelectedTag(tagText) {
   console.log('Fonction createSelectedTag appelée avec tagText:', tagText);
 
-
   const selectedTagsElement = document.getElementById('selectedTags');
   const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
   
@@ -60,12 +59,50 @@ export function createSelectedTag(tagText) {
       console.log(tagText);
       removeTagFromSelectedList(tagText);
     });
+
+    // Ajoutez également un gestionnaire d'événements pour supprimer le tag lorsque vous cliquez dessus dans la div
+    tagElement.addEventListener('click', (event) => {
+      const tagText = event.currentTarget.textContent;
+      removeTagFromSelectedList(tagText);
+    });
     
     tagElement.appendChild(closeIcon);
+
+    // Ajout le tag à selectedTagsElement
     selectedTagsElement.appendChild(tagElement);
-    console.log('Tag ajouté avec succès:', tagText);
+
+// Si c'est un tag du dropdown, ajout la classe 'dropdown-tag'
+const categories = ['ingredients', 'appliance', 'ustensils'];
+console.log(categories);
+
+categories.forEach(category => {
+  console.log(category);
+  const selectedTagsContainer = document.getElementById(`selected-tags-container-${category}`);
+  
+  if (selectedTagsContainer && category === 'appliance') { // Ajoutez la condition pour le dropdown 'appliance'
+    console.log(category);
+    const dropdownTagClone = tagElement.cloneNode(true);
+    dropdownTagClone.classList.add('dropdown-tag');
+    selectedTagsContainer.appendChild(dropdownTagClone);
+  }
+  else if (selectedTagsContainer && category === 'ingredients') { 
+    const dropdownTagClone = tagElement.cloneNode(true);
+    dropdownTagClone.classList.add('dropdown-tag');
+    selectedTagsContainer.appendChild(dropdownTagClone);
+  }
+  else if (selectedTagsContainer && category === 'ustensils') { 
+    const dropdownTagClone = tagElement.cloneNode(true);
+    dropdownTagClone.classList.add('dropdown-tag');
+    selectedTagsContainer.appendChild(dropdownTagClone);
+  }
+});
+
+
+console.log('Tag ajouté avec succès:', tagText);
+
   }
 }
+
 
 export function removeTagFromSelectedList(tagText) {
   console.log('TagText à supprimer:', tagText); // Vérifiez la valeur de tagText
@@ -81,48 +118,48 @@ export function removeTagFromSelectedList(tagText) {
     }
   });
 
-  // Désélectionne le tag dans la liste des tags
-  const tagListItems = document.querySelectorAll('.tag-list li.tag');
-  tagListItems.forEach(tagItem => {
-    if (tagItem.textContent.toLowerCase() === tagText) {
-      tagItem.classList.remove('selected');
-      console.log('Tag désélectionné dans la liste des tags.');
-    }
-  });
+  // Supprime également le tag du dropdown
+  const dropdownTags = document.querySelectorAll('.selected-tag.dropdown-tag');
+dropdownTags.forEach(tagElement => {
+  console.log(tagElement);
+  if (tagElement.textContent.includes(tagText)) {
+    tagElement.remove();
+    console.log('Tag supprimé du dropdown.');
+  }
+});
 
+  // Récupère les tags restants
+  const selectedTags = document.querySelectorAll('.selected-tag');
+  const selectedTagValues = Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
 
-// Récupère les tags restants
-const selectedTags = document.querySelectorAll('.selected-tag');
-const selectedTagValues = Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
-
-// Si des tags restent sélectionnés ou s'il y a du texte dans le champ de recherche, filtre des recettes en conséquence
-if (selectedTagValues.length > 0 || document.getElementById('search-bar').value.trim() !== '') {
+  // Si des tags restent sélectionnés ou s'il y a du texte dans le champ de recherche, filtre des recettes en conséquence
+  if (selectedTagValues.length > 0 || document.getElementById('search-bar').value.trim() !== '') {
     const updatedFilter = allRecipes.filter(recipe => {
-        const recipeTags = [
-            ...(recipe.ingredients || []).map(ingredient => normalizeTag(ingredient.ingredient)),
-            normalizeTag(recipe.appliance),
-            ...(recipe.ustensils || []).map(ustensil => normalizeTag(ustensil))
-        ];
-        const recipeName = normalizeTag(recipe.name.toLowerCase());
+      const recipeTags = [
+        ...(recipe.ingredients || []).map(ingredient => normalizeTag(ingredient.ingredient)),
+        normalizeTag(recipe.appliance),
+        ...(recipe.ustensils || []).map(ustensil => normalizeTag(ustensil))
+      ];
+      const recipeName = normalizeTag(recipe.name.toLowerCase());
 
-        // Vérifier si le champ de recherche contient du texte
-        const searchTextMatch = document.getElementById('search-bar').value.trim() === '' || recipeName.includes(document.getElementById('search-bar').value.trim());
+      // Vérifier si le champ de recherche contient du texte
+      const searchTextMatch = document.getElementById('search-bar').value.trim() === '' || recipeName.includes(document.getElementById('search-bar').value.trim());
 
-        // Vérifier si les tags restants correspondent aux recettes
-        return (selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch);
+      // Vérifier si les tags restants correspondent aux recettes
+      return (selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch);
     });
 
     console.log('Tags restants:', selectedTagValues);
     console.log('Recherche principale:', document.getElementById('search-bar').value.trim());
     console.log('Recettes filtrées mises à jour:', updatedFilter);
     displayRecipe(updatedFilter);
-    generateTagLists(updatedFilter)
-} else {
+    generateTagLists(updatedFilter);
+  } else {
     // Si aucun tag n'est sélectionné et qu'il n'y a pas de texte dans le champ de recherche, affichez toutes les recettes
     console.log('Aucun tag sélectionné et pas de texte dans la recherche. Afficher toutes les recettes.');
     displayRecipe(allRecipes);
-    generateTagLists(allRecipes)
-}
+    generateTagLists(allRecipes);
+  }
 }
 
 
@@ -145,61 +182,70 @@ function handleTagSelection(tagText) {
   });
 }
 
-
-
-
-
-
   
-
 export function setupDynamicSearchTag(allRecipes) {
-    const tagInputs = document.querySelectorAll('.tag-input');
+  const tagInputs = document.querySelectorAll('.tag-input');
 
-    tagInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const category = input.getAttribute('data-category');
-            const tagList = document.querySelector(`#${category}TagList`);
-            const allTags = Array.from(tagList.querySelectorAll('.tag'));
+  tagInputs.forEach(input => {
+    const clearButton = input.nextElementSibling; // Sélectionnez le bouton de suppression qui suit immédiatement l'entrée
 
-            const searchQuery = normalizeTag(input.value.trim().toLowerCase());
+    clearButton.style.display = 'none'; // Masquer initialement le bouton de suppression
 
-            allTags.forEach(tag => {
-                const tagText = normalizeTag(tag.textContent.toLowerCase());
-                if (tagText.includes(searchQuery)) {
-                    tag.style.display = 'block';
-                } else {
-                    tag.style.display = 'none';
-                }
-            });
-        });
+    input.addEventListener('input', () => {
+      const category = input.getAttribute('data-category');
+      const tagList = document.querySelector(`#${category}TagList`);
+      const allTags = Array.from(tagList.querySelectorAll('.tag'));
+
+      const searchQuery = normalizeTag(input.value.trim().toLowerCase());
+
+      allTags.forEach(tag => {
+        const tagText = normalizeTag(tag.textContent.toLowerCase());
+        if (tagText.includes(searchQuery)) {
+          tag.style.display = 'block';
+        } else {
+          tag.style.display = 'none';
+        }
+      });
+
+      // Afficher/masquer le bouton de suppression en fonction du contenu de l'entrée
+      if (input.value.length > 0) {
+        clearButton.style.display = 'block';
+      } else {
+        clearButton.style.display = 'none';
+      }
     });
 
-// Gestion des clics sur les tags
-const tagLists = document.querySelectorAll('.tag-list'); // Sélectionnez toutes les listes de tags
-
-tagLists.forEach(tagList => {
-  tagList.addEventListener('click', event => {
-    if (event.target.classList.contains('tag')) {
-      const tagItem = event.target;
-      const tagText = tagItem.textContent;
-      console.log('Tag sélectionné:', tagText);
-      handleTagSelection(tagText);
-    }
+    // Ajoutez un gestionnaire d'événements pour effacer le champ de saisie lorsque le bouton de suppression est cliqué
+    clearButton.addEventListener('click', () => {
+      input.value = '';
+      clearButton.style.display = 'none';
+    });
   });
-});
 
+  // Gestion des clics sur les tags
+  const tagLists = document.querySelectorAll('.tag-list'); // Sélectionnez toutes les listes de tags
+
+  tagLists.forEach(tagList => {
+    tagList.addEventListener('click', event => {
+      if (event.target.classList.contains('tag')) {
+        const tagItem = event.target;
+        const tagText = tagItem.textContent;
+        console.log('Tag sélectionné:', tagText);
+        handleTagSelection(tagText);
+      }
+    });
+  });
 }
-
 
 
 export function getSelectedTagValues() {
     const selectedTags = document.querySelectorAll('.selected-tag');
     
-    console.log(Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', ''))));
+    console.log(Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '').trim())));
     return Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
   }
 
-  export function filterRecipesByTag(allRecipes) {
+export function filterRecipesByTag(allRecipes) {
     const selectedTagValues = getSelectedTagValues();
     const searchInput = document.getElementById('search-bar');
     const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';

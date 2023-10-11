@@ -63,9 +63,10 @@ export function removeAccents(str) {
 
   export function setupSearchBar() {
     const searchInput = document.getElementById('search-bar');
-
+    const clearButton = document.getElementById('clear-button');
     
-  
+   // Style du bouton de suppression
+   clearButton.style.display = 'none'; // Masque initialement le bouton
     function updateFilteredRecipes(searchText) {
       const lowercaseSearchText = removeAccents(searchText.toLowerCase());
   
@@ -91,9 +92,22 @@ export function removeAccents(str) {
     searchInput.addEventListener('input', function () {
       const searchText = searchInput.value.trim();
       console.log(searchText);
+       // Affichage/masque le bouton de suppression en fonction du contenu de l'entrée
+       if (searchText.length > 0) {
+        clearButton.style.display = 'block';
+      } else {
+        clearButton.style.display = 'none';
+      }
  
       updateFilteredRecipes(searchText);
     });
+
+      // Ajoute un gestionnaire d'événements pour effacer le champ de saisie lorsque le bouton de suppression est cliqué
+      clearButton.addEventListener('click', function () {
+        searchInput.value = '';
+        clearButton.style.display = 'none';
+        updateFilteredRecipes('');
+      });
   
     searchInput.addEventListener('keydown', function (event) {
       if ((event.key === 'Backspace' || event.key === 'Delete') && searchInput.value.trim() === '') {

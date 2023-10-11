@@ -17,6 +17,7 @@
       
          <div class="input-group custom-search-bar  ">
             <input id="search-bar" type="text"  class="form-control  rounded-start-4 custom-input" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" maxlength="100" placeholder="Rechercher une recette, un ingrédient, ...">
+            <button id="clear-button">X</button>
             <div class="bg-white d-flex justify-content-center align-items-center rounded-end-4 p-1  " >      
              <button class="bg-black d-flex justify-content-center align-items-center rounded-4 width-shearch">
               <i class="fas fa-search text-white fa-2x"></i>
@@ -38,10 +39,13 @@
           <form class="pl-2 pr-2">
             <div class="form-group custom-form-group">
               <input type="text" id="ingredientSearchInput" class="form-control border-light-input tag-input" data-category="ingredients">
-              <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
-                <i class="fas fa-search icon-gray fa-1x"></i>
-              </button>
+              <span class="clear">X</span>
+                <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
+                  <i class="fas fa-search icon-gray fa-1x"></i>
+                </button>
+      
             </div>
+            <div id="selected-tags-container-ingredients"></div>
             <ul class="tag-list" id="ingredientsTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
@@ -59,10 +63,12 @@
           <form class="pl-2 pr-2">
             <div class="form-group custom-form-group">
               <input type="text" id="appareilsSearchInput" class="form-control border-light-input tag-input" data-category="appliance">
+              <span class="clear">X</span>
               <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
                 <i class="fas fa-search icon-gray fa-1x"></i>
               </button>
             </div>
+            <div id="selected-tags-container-appliance"></div>
             <ul class="tag-list" id="applianceTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
@@ -79,14 +85,15 @@
           <form class="pl-2 pr-2">
             <div class="form-group custom-form-group">
               <input type="text" id="ustensilesSearchInput" class="form-control border-light-input tag-input " data-category="ustensils">
+              <span class="clear">X</span>
               <button class="btn-border-none  d-flex justify-content-center align-items-center  width-search custom-btn">
                 <i class="fas fa-search icon-gray fa-1x"></i>
               </button>
             </div>
+            <div id="selected-tags-container-ustensils"></div>
             <ul class="tag-list" id="ustensilsTagList">
               <!-- La liste de mots-clés sera générée ici -->
             </ul>
-         
           </form>
         </div>
       </div>

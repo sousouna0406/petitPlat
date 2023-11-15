@@ -28,13 +28,14 @@ export function generateTagList(tagList, keywords) {
         tagList.appendChild(tagItem);
     });
 }
-  
-export function createSelectedTag(tagText) {
+function createSelectedTag(tagText) {
+  let category = ['ingredients', 'appliance', 'ustensils']
+  console.log(category);
   console.log('Fonction createSelectedTag appelée avec tagText:', tagText);
 
   const selectedTagsElement = document.getElementById('selectedTags');
   const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
-  
+
   // Vérifie si le tag est déjà sélectionné
   let isAlreadySelected = false;
   tagElements.forEach(tagElement => {
@@ -44,15 +45,17 @@ export function createSelectedTag(tagText) {
   });
 
   if (!isAlreadySelected) {
-    const tagElement = document.createElement('span');
-    tagElement.classList.add('selected-tag');
-    tagElement.textContent = tagText;
-    
-    // Ajouter une croix pour supprimer le tag
-    const closeIcon = document.createElement('span');
-    closeIcon.classList.add('close-icon');
-    closeIcon.textContent = 'x';
-    closeIcon.addEventListener('click', (event) => {
+    // Crée le premier élément de tag
+    const tagElement1 = document.createElement('span');
+    tagElement1.classList.add('selected-tag');
+    tagElement1.textContent = tagText;
+
+
+    // Ajouter une croix pour supprimer le tag au premier élément
+    const closeIcon1 = document.createElement('span');
+    closeIcon1.classList.add('close-icon');
+    closeIcon1.textContent = 'x';
+    closeIcon1.addEventListener('click', (event) => {
       const tagText = event.currentTarget.parentElement.textContent.replace('x', '').trim();
       console.log('Clic sur l\'icône de suppression');
       console.log('tagText avant la suppression :', tagText);
@@ -60,52 +63,68 @@ export function createSelectedTag(tagText) {
       removeTagFromSelectedList(tagText);
     });
 
+ 
     // Ajoutez également un gestionnaire d'événements pour supprimer le tag lorsque vous cliquez dessus dans la div
-    tagElement.addEventListener('click', (event) => {
+    tagElement1.addEventListener('click', (event) => {
       const tagText = event.currentTarget.textContent;
       removeTagFromSelectedList(tagText);
     });
-    
-    tagElement.appendChild(closeIcon);
 
-    // Ajout le tag à selectedTagsElement
-    selectedTagsElement.appendChild(tagElement);
-
-// Si c'est un tag du dropdown, ajout la classe 'dropdown-tag'
-const categories = ['ingredients', 'appliance', 'ustensils'];
-console.log(categories);
-
-categories.forEach(category => {
-  console.log(category);
-  const selectedTagsContainer = document.getElementById(`selected-tags-container-${category}`);
+    tagElement1.appendChild(closeIcon1);
   
-  if (selectedTagsContainer && category === 'appliance') { // Ajoutez la condition pour le dropdown 'appliance'
-    console.log(category);
-    const dropdownTagClone = tagElement.cloneNode(true);
-    dropdownTagClone.classList.add('dropdown-tag');
-    selectedTagsContainer.appendChild(dropdownTagClone);
+    // Ajout le premier tag à selectedTagsElement
+    selectedTagsElement.appendChild(tagElement1);
+
+    console.log('Tag ajouté avec succès:', tagText);
   }
-  else if (selectedTagsContainer && category === 'ingredients') { 
-    const dropdownTagClone = tagElement.cloneNode(true);
-    dropdownTagClone.classList.add('dropdown-tag');
-    selectedTagsContainer.appendChild(dropdownTagClone);
-  }
-  else if (selectedTagsContainer && category === 'ustensils') { 
-    const dropdownTagClone = tagElement.cloneNode(true);
-    dropdownTagClone.classList.add('dropdown-tag');
-    selectedTagsContainer.appendChild(dropdownTagClone);
-  }
+} 
+
+function createSelectedTagOneDropdown(tagText, category) {
+
+ console.log(tagText);
+
+  const tagContainer = document.getElementById(`selected-tags-container-${category}`);
+  console.log(tagContainer);
+  console.log();
+  const tagElement = document.createElement('div');
+  tagElement.classList.add(`tag-${category}`); 
+  tagElement.textContent = tagText;
+  tagContainer.appendChild(tagElement);
+
+  console.log(`Tag créé dans la catégorie ${category}: ${tagText}`);
+}
+
+const dropdowns = document.querySelectorAll('.dropdown');
+console.log(dropdowns);
+
+dropdowns.forEach(dropdown => {
+  dropdown.addEventListener('click', (event) => {
+  
+    console.log(event);
+    const tagElement = dropdown.querySelector('.tag');
+    console.log(`Dropdown clic: ${event.target.innerHTML}`);
+    
+    console.log(`Tag actuel dans ce dropdown: ${tagElement.textContent}`);
+    console.log(tagElement);
+    const tagText = event.target.innerHTML;
+    console.log(`Texte du tag sélectionné: ${tagText}`);
+    console.log(tagElement.textContent);
+    if (event.target.innerHTML === tagElement.textContent) {
+      console.log("HERE");
+      const selectedTag = event.target.textContent;
+      console.log(`Tag sélectionné: ${selectedTag}`);
+      const category = dropdown.getAttribute('data-category');
+      console.log(`Catégorie du dropdown: ${category}`);
+      createSelectedTagOneDropdown(selectedTag, category);
+    }
+  });
 });
 
-
-console.log('Tag ajouté avec succès:', tagText);
-
-  }
-}
 
 
 export function removeTagFromSelectedList(tagText) {
   console.log('TagText à supprimer:', tagText); // Vérifiez la valeur de tagText
+
 
   const selectedTagsElement = document.getElementById('selectedTags');
   const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
@@ -132,7 +151,7 @@ dropdownTags.forEach(tagElement => {
   const selectedTags = document.querySelectorAll('.selected-tag');
   const selectedTagValues = Array.from(selectedTags).map(tag => normalizeTag(tag.textContent.replace('x', '')));
 
-  // Si des tags restent sélectionnés ou s'il y a du texte dans le champ de recherche, filtre des recettes en conséquence
+  // Si des tags restent sélectionnes ou s'il y a du texte dans le champ de recherche, filtre des recettes en conséquence
   if (selectedTagValues.length > 0 || document.getElementById('search-bar').value.trim() !== '') {
     const updatedFilter = allRecipes.filter(recipe => {
       const recipeTags = [
@@ -142,10 +161,10 @@ dropdownTags.forEach(tagElement => {
       ];
       const recipeName = normalizeTag(recipe.name.toLowerCase());
 
-      // Vérifier si le champ de recherche contient du texte
+      // Vérifie si le champ de recherche contient du texte
       const searchTextMatch = document.getElementById('search-bar').value.trim() === '' || recipeName.includes(document.getElementById('search-bar').value.trim());
 
-      // Vérifier si les tags restants correspondent aux recettes
+      // Vérifie si les tags restants correspondent aux recettes
       return (selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch);
     });
 
@@ -155,7 +174,7 @@ dropdownTags.forEach(tagElement => {
     displayRecipe(updatedFilter);
     generateTagLists(updatedFilter);
   } else {
-    // Si aucun tag n'est sélectionné et qu'il n'y a pas de texte dans le champ de recherche, affichez toutes les recettes
+    // Si aucun tag n'est sélectionne et qu'il n'y a pas de texte dans le champ de recherche, affichez toutes les recettes
     console.log('Aucun tag sélectionné et pas de texte dans la recherche. Afficher toutes les recettes.');
     displayRecipe(allRecipes);
     generateTagLists(allRecipes);
@@ -174,8 +193,14 @@ function handleTagSelection(tagText) {
         console.log('Tag sélectionné:', tagText);
         tagItem.classList.add('selected');
         createSelectedTag(tagText);
-      }
-      
+       const categories = ['ingredients', 'appliance', 'ustensils'];
+
+        // Appeler la fonction pour chaque catégorie
+        categories.forEach(category => {
+          console.log(category);
+          createSelectedTagOneDropdown(tagText, category);
+        });
+      } 
       // Après avoir sélectionné ou désélectionné un tag, réexécutez filterRecipesByTag
       filterRecipesByTag(allRecipes);
     }
@@ -284,15 +309,17 @@ export function generateTagLists(recipes) {
   }
 
   const categories = ['ingredients', 'appliance', 'ustensils'];
-  
+ 
   const tagsByCategory = {};
 
   categories.forEach(category => {
-    tagsByCategory[category] = new Set();
+    tagsByCategory[category] = new Set()
+    console.log( tagsByCategory[category]);
   });
 
   recipes.forEach(recipe => {
     categories.forEach(category => {
+
       const categoryKeywords = Array.isArray(recipe[category])
         ? recipe[category].map(subKeyword => {
             if (typeof subKeyword === 'string') {
@@ -314,7 +341,9 @@ export function generateTagLists(recipes) {
 
   // Triez les tags par catégorie
   categories.forEach(category => {
+
     tagsByCategory[category] = Array.from(tagsByCategory[category]).sort();
+    console.log( tagsByCategory[category]);
   });
 
   // Utilisez les tags triés pour générer les listes de tags
@@ -326,6 +355,7 @@ export function generateTagLists(recipes) {
 
   tagLists.forEach((tagList, index) => {
     if (tagList) {
+      console.log(tagList);
       const relevantTags = tagsByCategory[categories[index]];
       generateTagList(tagList, relevantTags, categories[index]);
       console.log(`Liste de tags générée pour la catégorie ${categories[index]}:`, relevantTags);
@@ -335,4 +365,3 @@ export function generateTagLists(recipes) {
   console.log('Fin de la génération des listes de tags.');
 }
 
-  

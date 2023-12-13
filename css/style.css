@@ -79,9 +79,7 @@
 .dropdown-menu button {
     width: 2rem;
     height: 38px;
-    border-right: 1px solid rgb(186, 186, 186);
-    border-top: 1px solid rgb(186, 186, 186);
-    border-bottom: 1px solid rgb(186, 186, 186);
+
 }
 
 
@@ -118,6 +116,7 @@
 .custom-form-group {
     display: flex;
     align-items: center;
+    border: 1px solid rgb(186, 186, 186);
 }
 
 .custom-btn {
@@ -141,22 +140,11 @@
 .border-light-input {
 
     border-radius: 0px;
-    border-left: 1px solid rgb(186, 186, 186);
-    ;
-    border-top: 1px solid rgb(186, 186, 186);
-    ;
-    border-bottom: 1px solid rgb(186, 186, 186);
     ;
 }
 
 .form-control:focus {
     border-radius: 0px;
-    border-left: 1px solid rgb(186, 186, 186);
-    ;
-    border-top: 1px solid rgb(186, 186, 186);
-    ;
-    border-bottom: 1px solid rgb(186, 186, 186);
-    ;
 }
 
 .btn:hover {
@@ -287,4 +275,61 @@ article {
 
 .mr-1 {
     margin-left: 1rem;
+}
+
+ul,
+li {
+    list-style: none;
+    margin-top: none;
+}
+
+dl,
+ol,
+ul {
+    margin-top: 14px;
+    margin-bottom: 1rem;
+}
+
+ul {
+    max-height: 350px;
+    overflow: auto;
+}
+
+.category-element .tagDropdown {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px;
+    margin-top: 11px;
+    padding: 10px;
+    background-color: #FFD15B;
+}
+
+
+.dropdown .fa-chevron-down {
+    font-weight: 900;
+    transition: transform 0.3s;
+}
+
+.dropdown:hover .fa-chevron-down {
+    font-weight: 900;
+    transform: rotate(180deg);
+}
+
+.bg-white {
+
+    cursor: pointer;
+    background-color: yellowgreen
+}
+
+
+.text-white .fa-2x:hover {
+    background-color: #FFD15B;
+}
+
+#clear-button {
+    display: block;
+    border: 0px;
+    background: white;
+    color: rgb(186, 186, 186);
+    font-size: 23px;
 }

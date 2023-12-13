@@ -1,7 +1,5 @@
 import { recipeFactory } from '../factories/recipe.js';
 import { searchCumul } from '../pages/filtered.js';
-import { generateTagLists , setupDynamicSearchTag } from '../pages/tag-systeme.js';
-
 
 let allRecipes = []; 
 

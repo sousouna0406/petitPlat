@@ -5,7 +5,7 @@ export function removeAccents(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
-  export function filterRecipesByType(filterType, letter) {
+export function filterRecipesByType(filterType, letter) {
     const lowercaseLetter = removeAccents(letter.toLowerCase());
   
     const filteredRecipes = [];
@@ -55,13 +55,11 @@ export function removeAccents(str) {
     return filteredRecipes;
   }
   
-  
-  
-  export const eventFilteredRecipesUpdated = new Event('filteredRecipesUpdated');
+export const eventFilteredRecipesUpdated = new Event('filteredRecipesUpdated');
 
-  export let filteredRecipes = []; // Variable pour stocker les recettes filtrées
+export let filteredRecipes = []; // Variable pour stocker les recettes filtrées
 
-  export function setupSearchBar() {
+export function setupSearchBar() {
     const searchInput = document.getElementById('search-bar');
     const clearButton = document.getElementById('clear-button');
     
@@ -72,11 +70,16 @@ export function removeAccents(str) {
   
       if (searchText.length >= 3) {
         const filteredRecipesByName = filterRecipesByType('letter', lowercaseSearchText);
+        console.log(filteredRecipesByName);
         const filteredRecipesByIngredient = filterRecipesByType('ingredient', lowercaseSearchText);
+        console.log(filteredRecipesByIngredient);
         const filteredRecipesByUstensil = filterRecipesByType('ustensil', lowercaseSearchText);
+        console.log(filteredRecipesByUstensil);
         const filteredRecipesAppliance = filterRecipesByType('appliance', lowercaseSearchText);
+        console.log(filteredRecipesAppliance);
   
         const allFilteredRecipes = [...filteredRecipesByName, ...filteredRecipesByIngredient, ...filteredRecipesByUstensil, ...filteredRecipesAppliance];
+        console.log(allFilteredRecipes);
         const uniqueFilteredRecipes = [...new Set(allFilteredRecipes)];
   
         filteredRecipes = uniqueFilteredRecipes;
@@ -107,6 +110,7 @@ export function removeAccents(str) {
         searchInput.value = '';
         clearButton.style.display = 'none';
         updateFilteredRecipes('');
+        generateTagLists(recipes);
       });
   
     searchInput.addEventListener('keydown', function (event) {

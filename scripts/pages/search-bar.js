@@ -125,4 +125,19 @@ export function setupSearchBar() {
       console.log('Résultat combiné:', filteredRecipes);
     });
   }
+  /*
   
+  oop over recipes
+(    pour chaque recipe, regarder si inputExpression est || dans recipe.name || dans recipe. description soit dans recipe....
+)    &&
+    recipe.ingrediuents includes all ingredientsTagArray elemnts
+    &&
+    recipe.applicance includes all applianceTagArray elemnts
+    &&
+    recipe.ustensils includes all ustensilsTagArray elemnts
+  
+  events qui déclenchent la recherche
+  
+  on vide les résultats (results) à chaque recherche [] => results = [];
+  
+  pour chaque recherche */

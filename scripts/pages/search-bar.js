@@ -82,16 +82,16 @@ export function setupSearchBar(recipes) { // Ajout d'un paramètre recipes ici
       const regex = new RegExp(lowercaseSearchText, 'i'); // 'i' pour une correspondance insensible à la casse
   
       const filteredRecipesByName = recipes.filter(recipe => regex.test(removeAccents(recipe.name.toLowerCase())));
-      console.log(filteredRecipesByName);
+      console.log('Dans setupSearBar recuperation des recettes filtrées en fonction du nom',filteredRecipesByName);
       const filteredRecipesByIngredient = filterRecipesByType('ingredient', lowercaseSearchText, recipes);
-      console.log(filteredRecipesByIngredient);
+      console.log('Dans setupSearBar recuperation des recettes filtrées en fonction des Ingredients',filteredRecipesByName);
       const filteredRecipesByUstensil = filterRecipesByType('ustensil', lowercaseSearchText, recipes);
-      console.log(filteredRecipesByUstensil);
+      console.log('Dans setupSearBar recuperation des recettes filtrées en fonction des ustensils',filteredRecipesByName);
       const filteredRecipesAppliance = filterRecipesByType('appliance', lowercaseSearchText, recipes);
-      console.log(filteredRecipesAppliance);
+      console.log('Dans setupSearBar recuperation des recettes filtrées en fonction des appareils',filteredRecipesByName);
   
       const allFilteredRecipes = [...filteredRecipesByName, ...filteredRecipesByIngredient, ...filteredRecipesByUstensil, ...filteredRecipesAppliance];
-      console.log(allFilteredRecipes);
+      console.log("Dans setupSearBar cumul de l'ensemble des recette filtrées ", allFilteredRecipes);
       const uniqueFilteredRecipes = [...new Set(allFilteredRecipes)];
   
       filteredRecipes = uniqueFilteredRecipes;
@@ -105,9 +105,10 @@ export function setupSearchBar(recipes) { // Ajout d'un paramètre recipes ici
   }
   
 
-  searchInput.addEventListener('input', function () {
+  searchInput.addEventListener('input', function (event) {
+    search(event)
     const searchText = searchInput.value.trim();
-    console.log(searchText);
+    console.log('Valeur de seatchText dans  searchInput.addEventListener( input, function (event) :', searchText);
     // Affichage/masque le bouton de suppression en fonction du contenu de l'entrée
     if (searchText.length > 0) {
       clearButton.style.display = 'block';
@@ -119,7 +120,8 @@ export function setupSearchBar(recipes) { // Ajout d'un paramètre recipes ici
   });
 
   // Ajoute un gestionnaire d'événements pour effacer le champ de saisie lorsque le bouton de suppression est cliqué
-  clearButton.addEventListener('click', function () {
+  clearButton.addEventListener('click', function (event) {
+    search(event)
     searchInput.value = '';
     clearButton.style.display = 'none';
     updateFilteredRecipes('');
@@ -127,6 +129,7 @@ export function setupSearchBar(recipes) { // Ajout d'un paramètre recipes ici
   });
 
   searchInput.addEventListener('keydown', function (event) {
+    search(event)
     if ((event.key === 'Backspace' || event.key === 'Delete') && searchInput.value.trim() === '') {
       // Réinitialiser la recherche principale et actualiser la liste de tags
       generateTagLists(recipes);
@@ -134,8 +137,9 @@ export function setupSearchBar(recipes) { // Ajout d'un paramètre recipes ici
     }
   });
 
-  document.addEventListener('filteredRecipesUpdated', () => {
-    console.log('Résultat combiné:', filteredRecipes);
+  document.addEventListener('filteredRecipesUpdated', (event) => {
+    search(event)
+    console.log(' Résultat combiné des recettes filtrées :', filteredRecipes);
   });
 }
 

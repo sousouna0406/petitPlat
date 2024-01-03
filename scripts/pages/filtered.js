@@ -5,6 +5,7 @@ let allrecipes = recipes;
 let filteredBySearchRecipes = [];
 
 export function searchCumul() {
+
   console.log('Initialisation de la recherche cumulée.');
   generateTagLists(allrecipes);
   setupDynamicSearchTag(allrecipes);
@@ -16,9 +17,6 @@ export function cumul() {
   const searchInput = document.getElementById('search-bar');
   const searchText = searchInput ? searchInput.value.trim() : '';
   const selectedTagValues = getSelectedTagValues();
-  console.log('Tags sélectionnés :', selectedTagValues);
-  console.log('Texte de recherche :', searchText);
-  console.log(allrecipes);
 
 
   if (selectedTagValues.length > 0 && searchText !== '') {

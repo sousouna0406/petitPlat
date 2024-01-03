@@ -52,13 +52,16 @@ function createSelectedTag(tagText) {
     closeIcon1.classList.add('close-icon');
     closeIcon1.innerHTML = `<i class="fas fa-times"></i>`;
     closeIcon1.addEventListener('click', (event) => {
+      search(event)
       const tagText = event.currentTarget.parentElement.textContent.replace('x', '').trim();
+      console.log("Dans createSelectedTag() je supprime un tag grace a removeTagFromSelectedList() avec tagText" , tagText);
       removeTagFromSelectedList(tagText);
     });
 
  
     // Ajoutez également un gestionnaire d'événements pour supprimer le tag lorsque vous cliquez dessus dans la div
     tagElement1.addEventListener('click', (event) => {
+      search(event)
       const tagText = event.currentTarget.textContent;
       removeTagFromSelectedList(tagText);
     });
@@ -85,6 +88,7 @@ function createSelectedTagOneDropdown(tagText, category) {
     closeButton.classList.add('close-icon');
     closeButton.innerHTML = `<i class="fas fa-times"></i>`;
     closeButton.addEventListener('click', (event) => {
+      search(event)
       const tagText = event.currentTarget.parentElement.textContent.replace('x', '').trim();
       removeTagFromSelectedList(tagText);
     });
@@ -184,11 +188,14 @@ export function getSelectedTagValues() {
 }
 
 export function filterRecipesByTag(allRecipes) {
+  console.log("Entrer dans la fonction filterRecipesByTag");
   const selectedTagValues = getSelectedTagValues();
+  console.log("Récuperation de selectedTagValues", selectedTagValues);
   const searchInput = document.getElementById('search-bar');
-  const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
-
+  const inputText = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  console.log("Récuperation des caractere du champs de recherche principale :", inputText);
   const filteredRecipes = allRecipes.filter(recipe => {
+    console.log(recipe);
       const recipeTags = [
           ...recipe.ingredients.map(ingredient => normalizeTag(ingredient.ingredient)),
           normalizeTag(recipe.appliance),
@@ -196,14 +203,16 @@ export function filterRecipesByTag(allRecipes) {
       ];
       const recipeName = normalizeTag(recipe.name.toLowerCase());
       // Ajout de la recherche principale comme critère de filtrage
-      const searchTextMatch = searchText === '' || recipeName.includes(searchText);
+      const searchTextMatch = inputText === '' || recipeName.includes(inputText);
 
       return selectedTagValues.every(tag => recipeTags.includes(tag)) && searchTextMatch;
   });
+  console.log('Dans filterRecipesByTag en utilisant filteredRecipes j affiche les recettes filtrées ', filteredRecipes);
   displayRecipe(filteredRecipes);
   // Vérifiez si des tags sont sélectionnés ou si du texte de recherche est présent
-  if (selectedTagValues.length > 0 || searchText.length > 0) {
+  if (selectedTagValues.length > 0 || inputText.length > 0) {
       // Générez une nouvelle liste de tags en fonction des recettes filtrées
+     
       generateTagLists(filteredRecipes);
   }
 }
@@ -283,6 +292,7 @@ function handleTagSelection(tagText, category) {
         }
       }
       // Après avoir sélectionné ou désélectionné un tag, réexécutez filterRecipesByTag
+    //  console.log('Dans handleTagSelection je filtre les recettes en fonction des tags grace a filterRecipesByTag() en utilisant', allRecipes);
       filterRecipesByTag(allRecipes);
     }
   });
@@ -296,7 +306,8 @@ function inputDropdowns() {
   tagInputs.forEach(input => {
     const clearButton = input.nextElementSibling; // Sélectionnez le bouton de suppression qui suit immédiatement l'entrée
     clearButton.style.display = 'none'; // Masquer initialement le bouton de suppression
-    input.addEventListener('input', () => {
+    input.addEventListener('input', (event) => {
+      search(event)
    
       const category = input.getAttribute('data-category');
       const tagList = document.querySelector(`#${category}TagList`);
@@ -320,7 +331,8 @@ function inputDropdowns() {
         clearButton.style.display = 'none';
       }
           // Ajoutez un gestionnaire d'événements pour effacer le champ de saisie lorsque le bouton de suppression est cliqué
-  clearButton.addEventListener('click', () => {
+  clearButton.addEventListener('click', (event) => {
+    search(event)
     input.value = '';
     clearButton.style.display = 'none';
     // Réinitialisez la liste d'items à sa valeur initiale
@@ -345,6 +357,7 @@ function itemsSelected() {
     const tagLists = document.querySelectorAll('.tag-list'); // Sélectionnez toutes les listes de tags
     tagLists.forEach(tagList => {
       tagList.addEventListener('click', event => {
+        search(event)
         if (event.target.classList.contains('tag')) {
           const tagItem = event.target;
           const tagText = tagItem.textContent;

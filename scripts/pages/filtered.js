@@ -5,12 +5,41 @@ let allrecipes = recipes;
 let filteredBySearchRecipes = [];
 
 export function searchCumul() {
-
-  console.log('Initialisation de la recherche cumulée.');
   generateTagLists(allrecipes);
-  setupDynamicSearchTag(allrecipes);
-  setupSearchBar(allrecipes);
-  document.addEventListener('filteredRecipesUpdated', cumul);
+
+  const searchInput = document.getElementById('search-bar');
+  const dropdownTagsIngredients = document.getElementById('ingredientsTagList');
+  const dropdownTagsUstensils = document.getElementById('ustensilsTagList')
+  const dropdownTagsAppliance = document.getElementById('applianceTagList')
+  
+  console.log('Initialisation de la recherche cumulée.');
+searchInput.addEventListener('input', function (event) {
+  search(event)
+})
+dropdownTagsIngredients.addEventListener('click', function (event) {
+    const tagItem = event.target;
+    const tagText = tagItem.textContent;
+    console.log(tagText);
+    const category = tagItem.getAttribute('data-category');
+    console.log(category);
+  search(event)
+})
+dropdownTagsUstensils.addEventListener('click', function (event) {
+  const tagItem = event.target;
+  const tagText = tagItem.textContent;
+  console.log(tagText);
+  const category = tagItem.getAttribute('data-category');
+  console.log(category);
+search(event)
+})
+
+dropdownTagsAppliance.addEventListener('click', function (event) {
+  const tagItem = event.target;
+  const tagText = tagItem.textContent;
+  console.log(tagText);
+search(event)
+})
+
 }
 
 export function cumul() {

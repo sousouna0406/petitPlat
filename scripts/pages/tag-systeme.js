@@ -27,6 +27,7 @@ export function generateTagList(tagList, keywords) {
         tagList.appendChild(tagItem);
     });
 }
+
 function createSelectedTag(tagText) {
 
   const selectedTagsElement = document.getElementById('selectedTags');
@@ -195,7 +196,7 @@ export function filterRecipesByTag(allRecipes) {
   const inputText = searchInput ? searchInput.value.trim().toLowerCase() : '';
   console.log("Récuperation des caractere du champs de recherche principale :", inputText);
   const filteredRecipes = allRecipes.filter(recipe => {
-    console.log(recipe);
+    console.log();
       const recipeTags = [
           ...recipe.ingredients.map(ingredient => normalizeTag(ingredient.ingredient)),
           normalizeTag(recipe.appliance),
@@ -212,7 +213,7 @@ export function filterRecipesByTag(allRecipes) {
   // Vérifiez si des tags sont sélectionnés ou si du texte de recherche est présent
   if (selectedTagValues.length > 0 || inputText.length > 0) {
       // Générez une nouvelle liste de tags en fonction des recettes filtrées
-     
+    
       generateTagLists(filteredRecipes);
   }
 }
@@ -357,7 +358,7 @@ function itemsSelected() {
     const tagLists = document.querySelectorAll('.tag-list'); // Sélectionnez toutes les listes de tags
     tagLists.forEach(tagList => {
       tagList.addEventListener('click', event => {
-        search(event)
+        
         if (event.target.classList.contains('tag')) {
           const tagItem = event.target;
           const tagText = tagItem.textContent;

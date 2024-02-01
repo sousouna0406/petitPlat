@@ -1,6 +1,7 @@
 import { setupSearchBar, filteredRecipes } from '../pages/search-bar.js';
 import { setupDynamicSearchTag, generateTagLists, filterRecipesByTag, getSelectedTagValues, generateTagList } from '../pages/tag-systeme.js';
 
+
 let allrecipes = recipes;
 let filteredBySearchRecipes = [];
 
@@ -11,32 +12,32 @@ export function searchCumul() {
   const dropdownTagsIngredients = document.getElementById('ingredientsTagList');
   const dropdownTagsUstensils = document.getElementById('ustensilsTagList')
   const dropdownTagsAppliance = document.getElementById('applianceTagList')
-  
+
   console.log('Initialisation de la recherche cumulée.');
 searchInput.addEventListener('input', function (event) {
   search(event)
 })
 dropdownTagsIngredients.addEventListener('click', function (event) {
-    const tagItem = event.target;
-    const tagText = tagItem.textContent;
-    console.log(tagText);
-    const category = tagItem.getAttribute('data-category');
-    console.log(category);
+   const items = event.target
+   const txtItems = items.textContent
+   console.log(txtItems)
+   tagsIngredients.push(txtItems)
+   console.log(tagsIngredients);
   search(event)
 })
 dropdownTagsUstensils.addEventListener('click', function (event) {
-  const tagItem = event.target;
-  const tagText = tagItem.textContent;
-  console.log(tagText);
-  const category = tagItem.getAttribute('data-category');
-  console.log(category);
+  const items = event.target
+  const txtItems = items.textContent
+  tagsUstensils.push(txtItems)
+  console.log(tagsUstensils);
 search(event)
 })
 
 dropdownTagsAppliance.addEventListener('click', function (event) {
-  const tagItem = event.target;
-  const tagText = tagItem.textContent;
-  console.log(tagText);
+const items = event.target
+const txtItems = items.textContent
+tagsAppliance.push(txtItems)
+console.log(tagsAppliance);
 search(event)
 })
 

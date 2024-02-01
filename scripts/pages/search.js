@@ -1,3 +1,6 @@
+let tagsIngredients = [];
+let tagsUstensils = []
+let tagsAppliance = []
 function search(event) {
 
     console.log('search');
@@ -42,58 +45,23 @@ function isIncludedInInput(recipe) {
     }
     return false;
 }
-function isIncludedInIngredients(recipe ) {
-   
-    const tagItem = event.target;
-    const tagText = tagItem.textContent;
-    const category = tagItem.getAttribute('data-category');
-    console.log(category);
-    console.log(tagText);
-   
-    const lowerIngredients = tagText.toLowerCase();
-
-    for (let index = 0; index < recipe.ingredients.length; index++) {
-        const ingredient = recipe.ingredients[index].ingredient.toLowerCase();
-
-        if (ingredient.includes(lowerIngredients)) {
-           console.log(true);
-            return true;
-        }
-    }
-
-    console.log(false);
-    return false;
-
+function isIncludedInIngredients(recipe) {
+    console.log(tagsIngredients);
+    return tagsIngredients.every(tag => recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag.toLowerCase())));
 }
 
 function isIncludedInUstensils(recipe) {
-
-    const tagItem = event.target;
-    const tagText = tagItem.textContent;
-    const category = tagItem.getAttribute('data-category');
-    console.log(category);
-    console.log(tagText);
-
-    const lowerUstensils = tagText.toLowerCase();
-
-  
-    for (let index = 0; index < recipe.ustensils.length; index++) {
-        const ustensil = recipe.ustensils[index].toLowerCase(); 
-  
-        if (ustensil.includes(lowerUstensils)) {
-        
-            return true;
-        }
-    }
-  
-    return false;
+    console.log(tagsUstensils);
+    return tagsUstensils.every(tag => recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag.toLowerCase())));
 }
 function isIncludedInAppliance(recipe) {
+ console.log(tagsAppliance);
+ return tagsAppliance.every(tag => recipe.appliance.toLowerCase().includes(tag.toLowerCase()));
 
 }
 // Fonction isValid qui va verifier toutes les conditions (génerale)
 function isValid(recipe) {
-    return isIncludedInInput(recipe) && isIncludedInIngredients(recipe) //&& isIncludedInUstensils(recipe) && isIncludedInAppliance(recipe)//
+    return isIncludedInInput(recipe) && isIncludedInIngredients(recipe) && isIncludedInUstensils(recipe) && isIncludedInAppliance(recipe)
 }
 
 }

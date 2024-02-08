@@ -1,9 +1,61 @@
-let tagsIngredients = [];
-let tagsUstensils = []
-let tagsAppliance = []
-function search(event) {
+import { displayRecipe } from '../pages/index.js';
+import { generateTagLists, inputDropdowns } from '../pages/tag-systeme.js';
 
-    console.log('search');
+export let tagsIngredients = [];
+export let tagsUstensils = []
+export let tagsAppliance = []
+
+
+export function removeTag(txtItems, category) {
+  const removeTagsByCategory = (category) => {
+    const selector = `.${category} .tagDropdown`;
+    const dropdownTags = document.querySelectorAll(selector);
+
+    dropdownTags.forEach(tagElement => {
+      if (tagElement.textContent.includes(txtItems)) {
+        tagElement.remove();
+      }
+    });
+  };
+
+  // Supprime les tags en fonction de la catégorie
+  removeTagsByCategory('ingredients');
+  removeTagsByCategory('ustensils');
+  removeTagsByCategory('appliance');
+
+  const selectedTagsElement = document.getElementById('selectedTags');
+  const tagElements = selectedTagsElement.querySelectorAll('.selected-tag');
+
+  // Supprime le tag de la liste affichée et du tableau correspondant
+  tagElements.forEach(tagElement => {
+    if (tagElement.textContent.includes(txtItems)) {
+      tagElement.remove();
+
+      // Mettre à jour le tableau de tags en fonction de la catégorie
+      switch (category) {
+        case 'ingredients':
+          tagsIngredients = tagsIngredients.filter(tag => tag !== txtItems);
+          break;
+        case 'ustensils':
+          tagsUstensils = tagsUstensils.filter(tag => tag !== txtItems);
+          break;
+        case 'appliance':
+          tagsAppliance = tagsAppliance.filter(tag => tag !== txtItems);
+          break;
+        default:
+          console.error("Catégorie de tag non reconnue.");
+      }
+    }
+  });
+}
+
+
+
+
+
+
+export function search() {
+
     // Vider les recherches filtrées
     let filteredRecipes = []
     //Bouclé a travers les recettes
@@ -14,26 +66,20 @@ function search(event) {
         }
         
     }
+    inputDropdowns(filteredRecipes);
+    generateTagLists(filteredRecipes);
+    displayRecipe(filteredRecipes);
     console.log(filteredRecipes);
-    /*A chaque recettes verifié que:
-    - L'INPUT est inclus dans le nom ou la description ou les ustensiles ou les ingredients ou les appareils
-    et:
-    - Pour chacun des tags ingrédients la liste des ingrédients le comptient 
-     et:
-    - Pour chacun des tags ustensils la liste des ustensils le comptient
-     et:
-    - Pour chacun des tags appareils la liste des appareils le comptient
- */
+
 // créer la fonction isIncludedInRecipe{CATEGORY} qui verifie que l'input est inclus dans la recette
 function isIncludedInInput(recipe) {
-    //console.log(recipe);
+
     const searchInput = document.getElementById('search-bar');
     const searchText = searchInput.value.trim();
     const lowerInput = searchText.toLowerCase()
-    //console.log(lowerInput);
+ 
 
     const { name, description, ustensils, ingredients, appliance } = recipe;
-    console.log(recipe);
     if (
       name.toLowerCase().includes(lowerInput) ||
       description.toLowerCase().includes(lowerInput) ||
@@ -46,16 +92,13 @@ function isIncludedInInput(recipe) {
     return false;
 }
 function isIncludedInIngredients(recipe) {
-    console.log(tagsIngredients);
     return tagsIngredients.every(tag => recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag.toLowerCase())));
 }
 
 function isIncludedInUstensils(recipe) {
-    console.log(tagsUstensils);
     return tagsUstensils.every(tag => recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag.toLowerCase())));
 }
 function isIncludedInAppliance(recipe) {
- console.log(tagsAppliance);
  return tagsAppliance.every(tag => recipe.appliance.toLowerCase().includes(tag.toLowerCase()));
 
 }

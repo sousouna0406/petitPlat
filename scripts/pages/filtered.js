@@ -1,23 +1,25 @@
-
+// Import des modules
 import {  generateTagLists} from '../pages/tag-systeme.js';
 import { tagsIngredients , tagsUstensils , tagsAppliance ,search, removeTag} from "./search.js";
 
 let allrecipes = recipes;
 
-
+// Fonction principale pour la recherche cumulative
 export function searchCumul() {
+ // Génére les listes de tags initiales
   generateTagLists(allrecipes);
 
+  // Elements du DOM
   const searchInput = document.getElementById('search-bar');
   const dropdownTagsIngredients = document.getElementById('ingredientsTagList');
   const dropdownTagsUstensils = document.getElementById('ustensilsTagList')
   const dropdownTagsAppliance = document.getElementById('applianceTagList')
   const clearButton = document.getElementById('clear-button');
   clearButton.style.display = 'none'; 
-  console.log('Initialisation de la recherche cumulée.');
-  
-  searchInput.addEventListener('input', function (event) {
 
+
+// Écouteur d'événements pour la barre de recherche
+  searchInput.addEventListener('input', function (event) {
     const searchText = searchInput.value.trim();
     if (searchText.length >= 3) {
       search();
@@ -31,6 +33,7 @@ export function searchCumul() {
     })
   });
 
+ // Écouteur d'événements pour les tags d'ingrédients
 dropdownTagsIngredients.addEventListener('click', function (event) {
    const items = event.target
    const txtItems = items.textContent
@@ -42,6 +45,7 @@ dropdownTagsIngredients.addEventListener('click', function (event) {
   createTagOneDropdown(txtItems, category)
 })
 
+// Écouteur d'événements pour les tags  ustensiles
 dropdownTagsUstensils.addEventListener('click', function (event) {
   const items = event.target
   const txtItems = items.textContent
@@ -53,6 +57,7 @@ createTag(txtItems , category)
 createTagOneDropdown(txtItems, category)
 })
 
+// Écouteur d'événements pour les tags appareils
 dropdownTagsAppliance.addEventListener('click', function (event) {
 const items = event.target
 const txtItems = items.textContent
@@ -65,6 +70,8 @@ createTagOneDropdown(txtItems, category)
 
 }
 
+
+// Fonction pour créer un tag 
 function createTag(txtItems, category) {
 const selectedTagsElement = document.getElementById('selectedTags');
 console.log("item cliqué");
@@ -91,7 +98,6 @@ const TxtToRemoveOnTagList = tagElement.textContent;
 // Parcourir les enfants de la liste des tags
 for (let i = 0; i < tagList.children.length; i++) {
   const tagElement = tagList.children[i];
-
   // Vérifier si le texte correspond
   if (tagElement.textContent === TxtToRemoveOnTagList) {
     tagList.removeChild(tagElement);
@@ -102,7 +108,7 @@ for (let i = 0; i < tagList.children.length; i++) {
 
 
 
-
+// Fonction pour créer un tag dans les dropdowns
 export function createTagOneDropdown(txtItems, category) {
   const ingredientsTagContainer = document.getElementById('selected-tags-container-ingredients');
   const applianceTagContainer = document.getElementById('selected-tags-container-appliance');

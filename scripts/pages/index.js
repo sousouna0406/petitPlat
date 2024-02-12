@@ -7,6 +7,7 @@ let allRecipes = [];
 
 // Fonction asynchrone pour obtenir les recettes 
 export async function getRecipes() {
+  // eslint-disable-next-line no-undef
   allRecipes = recipes;
   return allRecipes;
 }

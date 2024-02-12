@@ -91,7 +91,7 @@ export function inputDropdowns() {
     const clearButton = input.nextElementSibling;
     clearButton.style.display = 'none';
 
-    input.addEventListener('input', (event) => {
+    input.addEventListener('input', () => {
       // Récupérer la catégorie de la liste de tags associée à l'input
       const category = input.getAttribute('data-category');
       const tagList = document.querySelector(`#${category}TagList`);
@@ -119,7 +119,7 @@ export function inputDropdowns() {
       }
 
       // Ajouter un gestionnaire d'événements pour effacer le champ de saisie lorsque le bouton de suppression est cliqué
-      clearButton.addEventListener('click', (event) => {
+      clearButton.addEventListener('click', () => {
         input.value = '';
         clearButton.style.display = 'none';
         tagList.innerHTML = '';

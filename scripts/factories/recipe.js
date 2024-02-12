@@ -7,7 +7,7 @@
 
 export function recipeFactory(recipeData) {
   // Déstructuration de l'objet recipeData
-  const { id, image, name, servings, ingredients, time, description, appliance, ustensils } = recipeData;
+  const {  image, name, ingredients, time, description} = recipeData;
 
   // Chemin de l'image de la recette
   const picture = `assets/recipe/${image}`;

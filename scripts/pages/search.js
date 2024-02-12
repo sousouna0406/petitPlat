@@ -60,6 +60,7 @@ export function search() {
   let filteredRecipes = [];
 
   // Utiliser la méthode filter pour obtenir les recettes filtrées
+  // eslint-disable-next-line no-undef
   filteredRecipes = recipes.filter(isValid);
 
   // Met à jour les dropdowns et les listes de tags

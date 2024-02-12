@@ -2,6 +2,7 @@
 import {  generateTagLists} from '../pages/tag-systeme.js';
 import { tagsIngredients , tagsUstensils , tagsAppliance ,search, removeTag} from "./search.js";
 
+// eslint-disable-next-line no-undef
 let allrecipes = recipes;
 
 // Fonction principale pour la recherche cumulative
@@ -19,7 +20,7 @@ export function searchCumul() {
 
 
 // Écouteur d'événements pour la barre de recherche
-  searchInput.addEventListener('input', function (event) {
+  searchInput.addEventListener('input', function () {
     const searchText = searchInput.value.trim();
     if (searchText.length >= 3) {
       search();
@@ -74,7 +75,7 @@ createTagOneDropdown(txtItems, category)
 // Fonction pour créer un tag 
 function createTag(txtItems, category) {
 const selectedTagsElement = document.getElementById('selectedTags');
-console.log("item cliqué");
+
 const tagElement = document.createElement("span")
 tagElement.classList.add('selected-tag');
 tagElement.textContent = txtItems
@@ -83,7 +84,7 @@ const closeIcon1 = document.createElement('span');
 closeIcon1.classList.add('close-icon');
 closeIcon1.innerHTML = `<i class="fas fa-times"></i>`;
 closeIcon1.addEventListener('click', () => {
-console.log('here');
+
 removeTag(txtItems,category )
 search()
 });
@@ -91,7 +92,7 @@ tagElement.appendChild(closeIcon1)
 selectedTagsElement.appendChild(tagElement)
 
 const tagList = document.getElementById(`${category}TagList`);
-console.log(tagList);
+
 
 const TxtToRemoveOnTagList = tagElement.textContent;
 
@@ -121,7 +122,7 @@ export function createTagOneDropdown(txtItems, category) {
     const closeButton = document.createElement('span');
     closeButton.classList.add('close-icon');
     closeButton.innerHTML = `<i class="fas fa-times"></i>`;
-    closeButton.addEventListener('click', (event) => {
+    closeButton.addEventListener('click', () => {
       tagElement.remove()
       removeTag(txtItems,category )
       search()

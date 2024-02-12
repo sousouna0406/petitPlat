@@ -58,7 +58,7 @@ export function removeTag(txtItems, category) {
 export function search() {
   // Utiliser la méthode filter pour obtenir les recettes filtrées
   let filteredRecipes = recipes.filter(isValid);
-
+//bla
   // Met à jour les dropdowns et les listes de tags
   inputDropdowns(filteredRecipes);
   generateTagLists(filteredRecipes);

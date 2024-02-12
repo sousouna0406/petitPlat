@@ -116,3 +116,4 @@ function isIncludedInAppliance(recipe) {
 function isValid(recipe) {
   return isIncludedInInput(recipe) && isIncludedInIngredients(recipe) && isIncludedInUstensils(recipe) && isIncludedInAppliance(recipe);
 }
+//tets

@@ -61,7 +61,9 @@ export function search() {
   let filteredRecipes = [];
 
   // Boucle à travers toutes les recettes
+  // eslint-disable-next-line no-undef
   for (let index = 0; index < recipes.length; index++) {
+    // eslint-disable-next-line no-undef
     const recipe = recipes[index];
     if (isValid(recipe)) {
       filteredRecipes.push(recipe);

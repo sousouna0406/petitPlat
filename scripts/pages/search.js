@@ -56,7 +56,7 @@ export function removeTag(txtItems, category) {
 
 // Fonction de recherche principale
 export function search() {
-
+// naim
   // Tableau pour stocker les recettes filtrées
   let filteredRecipes = [];
 

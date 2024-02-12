@@ -1,6 +1,4 @@
 
-import { displayRecipe } from '../pages/index.js';
-
  let allRecipes = recipes
 export let tagText = ''
 
@@ -133,7 +131,6 @@ export function inputDropdowns() {
     });
   });
 }
-
 
 
 inputDropdowns()

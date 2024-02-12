@@ -1,5 +1,5 @@
 import { displayRecipe } from '../pages/index.js';
-import { generateTagLists, inputDropdowns } from '../pages/tag-systeme.js';
+import { generateTagLists, inputDropdowns, normalizeTag } from '../pages/tag-systeme.js';
 
 export let tagsIngredients = [];
 export let tagsUstensils = []
@@ -56,55 +56,55 @@ export function removeTag(txtItems, category) {
 
 export function search() {
 
-    // Vider les recherches filtrées
-    let filteredRecipes = []
-    //Bouclé a travers les recettes
-    for (let index = 0; index < recipes.length; index++) {
-        const recipe = recipes[index];
-        if (isValid(recipe)) {
-            filteredRecipes.push(recipe)
-        }
-        
-    }
-    inputDropdowns(filteredRecipes);
-    generateTagLists(filteredRecipes);
-    displayRecipe(filteredRecipes);
-    console.log(filteredRecipes);
+  // Vider les recherches filtrées
+  let filteredRecipes = [];
+  //Bouclé a travers les recettes
+  for (let index = 0; index < recipes.length; index++) {
+      const recipe = recipes[index];
+      if (isValid(recipe)) {
+          filteredRecipes.push(recipe);
+      }
+      
+  }
+  inputDropdowns(filteredRecipes);
+  generateTagLists(filteredRecipes);
+  displayRecipe(filteredRecipes);
+  console.log(filteredRecipes);
 
 // créer la fonction isIncludedInRecipe{CATEGORY} qui verifie que l'input est inclus dans la recette
 function isIncludedInInput(recipe) {
 
-    const searchInput = document.getElementById('search-bar');
-    const searchText = searchInput.value.trim();
-    const lowerInput = searchText.toLowerCase()
- 
+  const searchInput = document.getElementById('search-bar');
+  const searchText = searchInput.value.trim();
+  const lowerInput = searchText.toLowerCase();
 
-    const { name, description, ustensils, ingredients, appliance } = recipe;
-    if (
-      name.toLowerCase().includes(lowerInput) ||
-      description.toLowerCase().includes(lowerInput) ||
-      ustensils.some(ustensil => ustensil.toLowerCase().includes(lowerInput)) ||
-      ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerInput)) ||
-      appliance.toLowerCase().includes(lowerInput)
-    ) {
-      return true;
-    }
-    return false;
+
+  const { name, description, ustensils, ingredients, appliance } = recipe;
+  if (
+    name.toLowerCase().includes(lowerInput) ||
+    description.toLowerCase().includes(lowerInput) ||
+    ustensils.some(ustensil => normalizeTag(ustensil).includes(lowerInput)) ||
+    ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerInput)) ||
+    appliance.toLowerCase().includes(lowerInput)
+  ) {
+    return true;
+  }
+  return false;
 }
 function isIncludedInIngredients(recipe) {
-    return tagsIngredients.every(tag => recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag.toLowerCase())));
+  return tagsIngredients.every(tag => recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag.toLowerCase())));
 }
 
 function isIncludedInUstensils(recipe) {
-    return tagsUstensils.every(tag => recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag.toLowerCase())));
+  return tagsUstensils.every(tag => recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag.toLowerCase())));
 }
 function isIncludedInAppliance(recipe) {
- return tagsAppliance.every(tag => recipe.appliance.toLowerCase().includes(tag.toLowerCase()));
+return tagsAppliance.every(tag => recipe.appliance.toLowerCase().includes(tag.toLowerCase()));
 
 }
 // Fonction isValid qui va verifier toutes les conditions (génerale)
 function isValid(recipe) {
-    return isIncludedInInput(recipe) && isIncludedInIngredients(recipe) && isIncludedInUstensils(recipe) && isIncludedInAppliance(recipe)
+  return isIncludedInInput(recipe) && isIncludedInIngredients(recipe) && isIncludedInUstensils(recipe) && isIncludedInAppliance(recipe);
 }
 
 }
